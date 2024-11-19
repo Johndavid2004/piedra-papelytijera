@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piedra, Papel o Tijeras</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url("https://ih1.redbubble.net/image.362595320.1078/flat,750x,075,f-pad,750x1000,f8f8f8.u7.jpg");
+            color: rgb(0, 0, 0);
+            overflow: hidden;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: brightness(0.5);
+        }
+
+        .container {
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            width: 400px;
+            padding: 20px;
+            background-color: #636363;
+            border-radius: 10px;
+            box-shadow: 10px 15px 20px rgb(131, 143, 248);
+        }
+
+        h2 {
+            color: #000;
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form input {
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            margin-bottom: 15px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #a8a7a7;
+            color: white;
+            box-shadow: 5px 5px 6px rgb(255, 255, 255);
+        }
+
+        .form button {
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #002fff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.5s;
+            box-shadow: 10px 15px 20px rgb(131, 143, 248);
+        }
+
+        .form button:hover {
+            background-color: #00f3f3;
+            transform: scale(1.2);
+        }
+
+        .form p {
+            color: #000;
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .form p a {
+            color: #000;
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            color: #1100fc;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .game-page {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .game-page img {
+            width: 150px;
+            margin: 15px;
+            cursor: pointer;
+            transition: transform 0.5s;
+        }
+
+        .game-page img:hover {
+            transform: scale(1.1);
+        }
+
+        .game-page h2 {
+            color: #000;
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            margin-bottom: 20px;
+        }
+
+        .game-page button {
+            font-family: "Geist Mono", monospace;
+            font-optical-sizing: auto;
+            font-weight: weight;
+            font-style: normal;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #002fff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.5s;
+            box-shadow: 10px 15px 20px rgb(131, 143, 248);
+        }
+
+        .game-page button:hover {
+            background-color: #47ffc8;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="authContainer">
+        <div id="formContainer">
+            <form id="loginForm" class="form" onsubmit="userModule.login(event)">
+                <h2><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</h2>
+                <input type="text" id="loginUsername" placeholder="Nombre de usuario" required>
+                <input type="password" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+                <p>¿No tienes una cuenta? <a href="#" onclick="userModule.toggleForms()">Regístrate</a></p>
+            </form>
+
+            <form id="registerForm" class="form hidden" onsubmit="userModule.register(event)">
+                <h2><i class="fas fa-user-plus"></i> Registrarse</h2>
+                <input type="text" id="registerUsername" placeholder="Nombre de usuario" required>
+                <input type="password" id="registerPassword" placeholder="Contraseña" required>
+                <button type="submit">Registrarse</button>
+                <p>¿Ya tienes una cuenta? <a href="#" onclick="userModule.toggleForms()">Inicia sesión</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div id="gamePage" class="hidden game-page">
+        <h2>¡Hola <span id="playerName"></span>! Bienvenido al juego</h2>
+        <p>Selecciona tu jugada:</p>
+        <div>
+            <img src="https://c0.klipartz.com/pngpicture/422/99/gratis-png-tijeras-de-piedra-papel-iconos-de-computadora-tijeras.png" alt="Piedra" onclick="game.play('piedra')">
+            <img src="https://ponceelrelajado.com/juego/img/papel.png" alt="Papel" onclick="game.play('papel')">
+            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijeras" onclick="game.play('tijeras')">
+        </div>
+        <button onclick="userModule.logout()">Cerrar Sesión</button>
+    </div>
+
+    <script>
+        class User {
+            constructor(username, password) {
+                this.username = username;
+                this.password = password;
+            }
+        }
+
+        class UserModule {
+            constructor() {
+                this.users = [];
+                this.currentUser = null;
+            }
+
+            toggleForms() {
+                document.getElementById('loginForm').classList.toggle('hidden');
+                document.getElementById('registerForm').classList.toggle('hidden');
+            }
+
+            register(event) {
+                event.preventDefault();
+                const username = document.getElementById('registerUsername').value;
+                const password = document.getElementById('registerPassword').value;
+
+                if (this.users.some(user => user.username === username)) {
+                    alert("El usuario ya existe. Por favor, elige otro nombre.");
+                    return;
+                }
+
+                const newUser = new User(username, password);
+                this.users.push(newUser);
+                alert("Registro exitoso. Ahora puedes iniciar sesión.");
+                this.toggleForms();
+            }
+
+            login(event) {
+                event.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                const user = this.users.find(user => user.username === username && user.password === password);
+                if (user) {
+                    this.currentUser = user;
+                    this.showGamePage();
+                } else {
+                    alert("Credenciales incorrectas. Por favor, intenta nuevamente.");
+                }
+            }
+
+            showGamePage() {
+                document.getElementById('authContainer').classList.add('hidden');
+                const gamePage = document.getElementById('gamePage');
+                gamePage.classList.remove('hidden');
+                document.getElementById('playerName').textContent = this.currentUser.username;
+            }
+
+            logout() {
+                this.currentUser = null;
+                document.getElementById('gamePage').classList.add('hidden');
+                document.getElementById('authContainer').classList.remove('hidden');
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.options = ["piedra", "papel", "tijeras"];
+            }
+
+            play(userChoice) {
+                const computerChoice = this.options[Math.floor(Math.random() * this.options.length)];
+                let result;
+
+                if (userChoice === computerChoice) {
+                    result = "Empate!";
+                } else if (
+                    (userChoice === "piedra" && computerChoice === "tijeras") ||
+                    (userChoice === "papel" && computerChoice === "piedra") ||
+                    (userChoice === "tijeras" && computerChoice === "papel")
+                ) {
+                    result = "¡Ganaste!";
+                } else {
+                    result = "Perdiste.";
+                }
+                alert(`Elegiste: ${userChoice}\nLa computadora eligió: ${computerChoice}\n${result}`);
+            }
+        }
+        const userModule = new UserModule();
+        const game = new Game();
+    </script>
+</body>
+</html>
