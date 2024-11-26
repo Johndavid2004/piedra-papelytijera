@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juegos de Piedra, Papel, Tijeras</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap">
+    <style>
+        body {
+            font-family: "Geist Mono", monospace;
+            background-color: #1e1e2f;
+            color: #e4e4e7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container, .game-container {
+            display: none;
+            text-align: center;
+            background: #2b2b3d;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+        }
+        .container.active, .game-container.active {
+            display: block;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4e4eb9;
+            color: #e4e4e7;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3838a6;
+        }
+        .choices img {
+            width: 100px;
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, filter 0.2s;
+            filter: brightness(0.8);
+        }
+        .choices img:hover {
+            transform: scale(1.1);
+            filter: brightness(1);
+        }
+        .scoreboard span, .results p {
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inicio de Sesión -->
+    <div id="authContainer" class="container active">
+        <h2>Iniciar Sesión</h2>
+        <form onsubmit="navigateTo('menuContainer'); return false;">
+            <input type="text" placeholder="Nombre de usuario" required>
+            <input type="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        <button onclick="navigateTo('registerContainer')">Registrarse</button>
+    </div>
+
+    <!-- Registro -->
+    <div id="registerContainer" class="container">
+        <h2>Registrarse</h2>
+        <form onsubmit="navigateTo('menuContainer'); return false;">
+            <input type="text" placeholder="Nombre de usuario" required>
+            <input type="password" placeholder="Contraseña" required>
+            <button type="submit">Crear Cuenta</button>
+        </form>
+        <button onclick="navigateTo('authContainer')">Volver</button>
+    </div>
+
+    <!-- Menú -->
+    <div id="menuContainer" class="container">
+        <h1>Elige tu modo de juego</h1>
+        <button onclick="loadGame('classic')">Piedra, Papel o Tijeras</button>
+        <button onclick="loadGame('extended')">Piedra, Papel, Tijeras, Lagarto, Spock</button>
+    </div>
+
+    <!-- Juegos -->
+    <div id="classicGame" class="game-container">
+        <h1>Piedra, Papel o Tijeras</h1>
+        <div class="choices">
+            <img src="https://ponceelrelajado.com/juego/img/piedra.png" alt="Piedra" onclick="playGame('piedra', 'classic')">
+            <img src="https://ponceelrelajado.com/juego/img/papel.png" alt="Papel" onclick="playGame('papel', 'classic')">
+            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijeras" onclick="playGame('tijeras', 'classic')">
+        </div>
+        <div class="results">
+            <p id="classicResult"></p>
+        </div>
+        <div class="scoreboard">
+            <span id="classicWins">Victorias: 0</span>
+            <span id="classicLosses">Derrotas: 0</span>
+            <span id="classicTies">Empates: 0</span>
+        </div>
+        <button onclick="resetGame('classic')">Reiniciar Juego</button>
+        <button onclick="navigateTo('menuContainer')">Volver al Menú</button>
+    </div>
+
+    <div id="extendedGame" class="game-container">
+        <h1>Piedra, Papel, Tijeras, Lagarto, Spock</h1>
+        <div class="choices">
+            <img src="https://ponceelrelajado.com/juego/img/piedra.png" alt="Piedra" onclick="playGame('piedra', 'extended')">
+            <img src="https://ponceelrelajado.com/juego/img/papel.png" alt="Papel" onclick="playGame('papel', 'extended')">
+            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijeras" onclick="playGame('tijeras', 'extended')">
+            <img src="https://example.com/lagarto.png" alt="Lagarto" onclick="playGame('lagarto', 'extended')">
+            <img src="https://www.christiandve.com/wp-content/uploads/2013/06/PPT-Lagarto-Spock.png-en-la-Play-Store.png" alt="Spock" onclick="playGame('spock', 'extended')">
+        </div>
+        <div class="results">
+            <p id="extendedResult"></p>
+        </div>
+        <div class="scoreboard">
+            <span id="extendedWins">Victorias: 0</span>
+            <span id="extendedLosses">Derrotas: 0</span>
+            <span id="extendedTies">Empates: 0</span>
+        </div>
+        <button onclick="resetGame('extended')">Reiniciar Juego</button>
+        <button onclick="navigateTo('menuContainer')">Volver al Menú</button>
+    </div>
+
+    <script>
+        const scores = {
+            classic: { wins: 0, losses: 0, ties: 0 },
+            extended: { wins: 0, losses: 0, ties: 0 }
+        };
+
+        const choices = {
+            classic: ["piedra", "papel", "tijeras"],
+            extended: ["piedra", "papel", "tijeras", "lagarto", "spock"]
+        };
+
+        function navigateTo(containerId) {
+            document.querySelectorAll('.container').forEach(container => container.classList.remove('active'));
+            document.querySelectorAll('.game-container').forEach(container => container.classList.remove('active'));
+            document.getElementById(containerId).classList.add('active');
+        }
+
+        function loadGame(mode) {
+            navigateTo(`${mode}Game`);
+        }
+
+        function playGame(playerChoice, mode) {
+            const computerChoice = choices[mode][Math.floor(Math.random() * choices[mode].length)];
+            let result;
+
+            if (playerChoice === computerChoice) {
+                result = "Empate";
+                scores[mode].ties++;
+            } else if (
+                (playerChoice === "piedra" && ["tijeras", "lagarto"].includes(computerChoice)) ||
+                (playerChoice === "papel" && ["piedra", "spock"].includes(computerChoice)) ||
+                (playerChoice === "tijeras" && ["papel", "lagarto"].includes(computerChoice)) ||
+                (playerChoice === "lagarto" && ["spock", "papel"].includes(computerChoice)) ||
+                (playerChoice === "spock" && ["tijeras", "piedra"].includes(computerChoice))
+            ) {
+                result = "Ganaste";
+                scores[mode].wins++;
+            } else {
+                result = "Perdiste";
+                scores[mode].losses++;
+            }
+
+            document.getElementById(`${mode}Result`).textContent = `Elegiste: ${playerChoice}. La computadora eligió: ${computerChoice}. Resultado: ${result}.`;
+            document.getElementById(`${mode}Wins`).textContent = `Victorias: ${scores[mode].wins}`;
+            document.getElementById(`${mode}Losses`).textContent = `Derrotas: ${scores[mode].losses}`;
+            document.getElementById(`${mode}Ties`).textContent = `Empates: ${scores[mode].ties}`;
+        }
+
+        function resetGame(mode) {
+            scores[mode] = { wins: 0, losses: 0, ties: 0 };
+            document.getElementById(`${mode}Result`).textContent = "";
+            document.getElementById(`${mode}Wins`).textContent = "Victorias: 0";
+            document.getElementById(`${mode}Losses`).textContent = "Derrotas: 0";
+            document.getElementById(`${mode}Ties`).textContent = "Empates: 0";
+        }
+    </script>
+</body>
+</html>
