@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Juegos de Piedra, Papel, Tijeras</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: "Geist Mono", monospace;
@@ -15,6 +16,7 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
         .container, .game-container {
             display: none;
@@ -23,6 +25,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
         }
         .container.active, .game-container.active {
             display: block;
@@ -37,6 +41,13 @@
             background-color: #4e4eb9;
             color: #e4e4e7;
             transition: background-color 0.3s;
+            display: block;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button i {
+            margin-right: 8px;
         }
         button:hover {
             background-color: #3838a6;
@@ -56,133 +67,172 @@
             margin: 10px 0;
             font-size: 1.2rem;
         }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin: 10px;
+            width: 100%;
+            max-width: 300px;
+            border: 2px solid #4e4eb9;
+            border-radius: 5px;
+            background-color: #3b3b5f;
+            color: #e4e4e7;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="password"]:focus {
+            background-color: #2b2b3d;
+            border-color: #3e40b4;
+            outline: none;
+        }
     </style>
 </head>
 <body>
-    <!-- Inicio de Sesión -->
     <div id="authContainer" class="container active">
         <h2>Iniciar Sesión</h2>
-        <form onsubmit="navigateTo('menuContainer'); return false;">
-            <input type="text" placeholder="Nombre de usuario" required>
-            <input type="password" placeholder="Contraseña" required>
-            <button type="submit">Iniciar Sesión</button>
+        <form id="loginForm" onsubmit="return login(event)">
+            <input type="text" id="username" placeholder="Nombre de usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
         </form>
-        <button onclick="navigateTo('registerContainer')">Registrarse</button>
+        <button onclick="navigateTo('registerContainer')"><i class="fas fa-user-plus"></i> Registrarse</button>
     </div>
 
-    <!-- Registro -->
     <div id="registerContainer" class="container">
         <h2>Registrarse</h2>
-        <form onsubmit="navigateTo('menuContainer'); return false;">
-            <input type="text" placeholder="Nombre de usuario" required>
-            <input type="password" placeholder="Contraseña" required>
-            <button type="submit">Crear Cuenta</button>
+        <form id="registerForm" onsubmit="return register(event)">
+            <input type="text" id="newUsername" placeholder="Nombre de usuario" required>
+            <input type="password" id="newPassword" placeholder="Contraseña" required>
+            <button type="submit"><i class="fas fa-user-check"></i> Crear Cuenta</button>
         </form>
-        <button onclick="navigateTo('authContainer')">Volver</button>
+        <button onclick="navigateTo('authContainer')"><i class="fas fa-arrow-left"></i> Volver</button>
     </div>
-
-    <!-- Menú -->
-    <div id="menuContainer" class="container">
+    <div class="menu-container">
         <h1>Elige tu modo de juego</h1>
         <button onclick="loadGame('classic')">Piedra, Papel o Tijeras</button>
         <button onclick="loadGame('extended')">Piedra, Papel, Tijeras, Lagarto, Spock</button>
     </div>
 
-    <!-- Juegos -->
     <div id="classicGame" class="game-container">
         <h1>Piedra, Papel o Tijeras</h1>
         <div class="choices">
             <img src="https://ponceelrelajado.com/juego/img/piedra.png" alt="Piedra" onclick="playGame('piedra', 'classic')">
             <img src="https://ponceelrelajado.com/juego/img/papel.png" alt="Papel" onclick="playGame('papel', 'classic')">
-            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijeras" onclick="playGame('tijeras', 'classic')">
+            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijera" onclick="playGame('tijera', 'classic')">
         </div>
-        <div class="results">
-            <p id="classicResult"></p>
-        </div>
-        <div class="scoreboard">
-            <span id="classicWins">Victorias: 0</span>
-            <span id="classicLosses">Derrotas: 0</span>
-            <span id="classicTies">Empates: 0</span>
-        </div>
-        <button onclick="resetGame('classic')">Reiniciar Juego</button>
-        <button onclick="navigateTo('menuContainer')">Volver al Menú</button>
     </div>
-
+>
     <div id="extendedGame" class="game-container">
         <h1>Piedra, Papel, Tijeras, Lagarto, Spock</h1>
         <div class="choices">
             <img src="https://ponceelrelajado.com/juego/img/piedra.png" alt="Piedra" onclick="playGame('piedra', 'extended')">
             <img src="https://ponceelrelajado.com/juego/img/papel.png" alt="Papel" onclick="playGame('papel', 'extended')">
-            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijeras" onclick="playGame('tijeras', 'extended')">
-            <img src="https://example.com/lagarto.png" alt="Lagarto" onclick="playGame('lagarto', 'extended')">
+            <img src="https://ponceelrelajado.com/juego/img/tijera.png" alt="Tijera" onclick="playGame('tijera', 'extended')">
+            <img src="https://storage.needpix.com/rsynced_images/rock-paper-scissors-296855_1280.png" alt="Lagarto" onclick="playGame('lagarto', 'extended')">
             <img src="https://www.christiandve.com/wp-content/uploads/2013/06/PPT-Lagarto-Spock.png-en-la-Play-Store.png" alt="Spock" onclick="playGame('spock', 'extended')">
         </div>
-        <div class="results">
-            <p id="extendedResult"></p>
-        </div>
-        <div class="scoreboard">
-            <span id="extendedWins">Victorias: 0</span>
-            <span id="extendedLosses">Derrotas: 0</span>
-            <span id="extendedTies">Empates: 0</span>
-        </div>
-        <button onclick="resetGame('extended')">Reiniciar Juego</button>
-        <button onclick="navigateTo('menuContainer')">Volver al Menú</button>
+    </div>
+
+    <div id="resultsContainer" class="results">
+        <p id="resultText"></p>
     </div>
 
     <script>
-        const scores = {
-            classic: { wins: 0, losses: 0, ties: 0 },
-            extended: { wins: 0, losses: 0, ties: 0 }
-        };
+        class Auth {
+            constructor() {
+                this.authContainer = document.getElementById('authContainer');
+                this.registerContainer = document.getElementById('registerContainer');
+                this.menuContainer = document.querySelector('.menu-container');
+                this.loggedIn = false;
+            }
 
-        const choices = {
-            classic: ["piedra", "papel", "tijeras"],
-            extended: ["piedra", "papel", "tijeras", "lagarto", "spock"]
-        };
+            navigateTo(containerId) {
+                if (containerId === 'registerContainer') {
+                    this.authContainer.classList.remove('active');
+                    this.registerContainer.classList.add('active');
+                } else if (containerId === 'authContainer') {
+                    this.registerContainer.classList.remove('active');
+                    this.authContainer.classList.add('active');
+                }
+            }
+
+            login(username, password) {
+                console.log(`Iniciando sesión como ${username}`);
+                this.loggedIn = true;
+                this.menuContainer.style.display = 'block'; 
+                this.authContainer.classList.remove('active');
+            }
+
+            register(username, password) {
+                console.log(`Registrando usuario ${username}`);
+                this.navigateTo('authContainer'); 
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.classicGameContainer = document.getElementById('classicGame');
+                this.extendedGameContainer = document.getElementById('extendedGame');
+            }
+
+            loadGame(mode) {
+                if (!auth.loggedIn) {
+                    alert("Por favor, inicie sesión primero.");
+                    return;
+                }
+                this.classicGameContainer.style.display = mode === 'classic' ? 'block' : 'none';
+                this.extendedGameContainer.style.display = mode === 'extended' ? 'block' : 'none';
+            }
+
+            playGame(choice, mode) {
+                const choices = ['piedra', 'papel', 'tijera', 'lagarto', 'spock'];
+                const playerChoice = choice;
+                const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+
+                let result = '';
+                if (playerChoice === computerChoice) {
+                    result = 'Es un empate!';
+                } else if ((playerChoice === 'piedra' && (computerChoice === 'tijera' || computerChoice === 'lagarto')) ||
+                           (playerChoice === 'papel' && (computerChoice === 'piedra' || computerChoice === 'spock')) ||
+                           (playerChoice === 'tijera' && (computerChoice === 'papel' || computerChoice === 'lagarto')) ||
+                           (playerChoice === 'lagarto' && (computerChoice === 'spock' || computerChoice === 'papel')) ||
+                           (playerChoice === 'spock' && (computerChoice === 'tijera' || computerChoice === 'piedra'))) {
+                    result = `¡Ganaste! ${playerChoice} vence a ${computerChoice}.`;
+                } else {
+                    result = `Perdiste. ${computerChoice} vence a ${playerChoice}.`;
+                }
+
+                document.getElementById('resultText').textContent = result;
+                console.log(`Jugador: ${playerChoice}, Computadora: ${computerChoice}, Resultado: ${result}`);
+            }
+        }
+
+        const auth = new Auth();
+        const game = new Game();
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            auth.login(username, password);
+        }
+
+        function register(event) {
+            event.preventDefault();
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            auth.register(username, password);
+        }
 
         function navigateTo(containerId) {
-            document.querySelectorAll('.container').forEach(container => container.classList.remove('active'));
-            document.querySelectorAll('.game-container').forEach(container => container.classList.remove('active'));
-            document.getElementById(containerId).classList.add('active');
+            auth.navigateTo(containerId);
         }
 
         function loadGame(mode) {
-            navigateTo(`${mode}Game`);
+            game.loadGame(mode);
         }
 
-        function playGame(playerChoice, mode) {
-            const computerChoice = choices[mode][Math.floor(Math.random() * choices[mode].length)];
-            let result;
-
-            if (playerChoice === computerChoice) {
-                result = "Empate";
-                scores[mode].ties++;
-            } else if (
-                (playerChoice === "piedra" && ["tijeras", "lagarto"].includes(computerChoice)) ||
-                (playerChoice === "papel" && ["piedra", "spock"].includes(computerChoice)) ||
-                (playerChoice === "tijeras" && ["papel", "lagarto"].includes(computerChoice)) ||
-                (playerChoice === "lagarto" && ["spock", "papel"].includes(computerChoice)) ||
-                (playerChoice === "spock" && ["tijeras", "piedra"].includes(computerChoice))
-            ) {
-                result = "Ganaste";
-                scores[mode].wins++;
-            } else {
-                result = "Perdiste";
-                scores[mode].losses++;
-            }
-
-            document.getElementById(`${mode}Result`).textContent = `Elegiste: ${playerChoice}. La computadora eligió: ${computerChoice}. Resultado: ${result}.`;
-            document.getElementById(`${mode}Wins`).textContent = `Victorias: ${scores[mode].wins}`;
-            document.getElementById(`${mode}Losses`).textContent = `Derrotas: ${scores[mode].losses}`;
-            document.getElementById(`${mode}Ties`).textContent = `Empates: ${scores[mode].ties}`;
-        }
-
-        function resetGame(mode) {
-            scores[mode] = { wins: 0, losses: 0, ties: 0 };
-            document.getElementById(`${mode}Result`).textContent = "";
-            document.getElementById(`${mode}Wins`).textContent = "Victorias: 0";
-            document.getElementById(`${mode}Losses`).textContent = "Derrotas: 0";
-            document.getElementById(`${mode}Ties`).textContent = "Empates: 0";
+        function playGame(choice, mode) {
+            game.playGame(choice, mode);
         }
     </script>
 </body>
